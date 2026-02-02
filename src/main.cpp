@@ -4,41 +4,16 @@
 #include <WebSocketsServer.h>
 #include <HardwareSerial.h>
 
-/*
-Port COM info : 
-19200 BAUD Rate
-8N1H
-
-Commande a taper
-\\\
-aq ft 4000
-Alarm off
-CLEAR EVENT LED
-DG
-Alarm 1
-q
-
-depui le PC EAU Entre faire revenir le curseur de putty au debut de la ligne 
-
-ligne 275 dans 
-le JS socket.send(msg + "\n"); supression du \n
-
-Strucure WS 
-4 1er caractere le role du truck 
-le reste les data 
-*/
-
-const char* ssid = "EAU-Terminal";
-const char* password = "12345678";
+const char* ssid = "EAU-Terminal";//Nom du SSID (Wifi)
+const char* password = "12345678";//Code du Wifi
 
 #define RATIO_DIVISEUR =2;
 #define ADC_ATTEN = ADC_11db;
 #define ADC_MAX = 8191.0;
 #define VREF = 2.5;
 
-AsyncWebServer server(80);
-WebSocketsServer webSocket = WebSocketsServer(81);
-HardwareSerial MySerial(1); // UART1
+AsyncWebServer server(80);//Port du serveur Web 
+WebSocketsServer webSocket = WebSocketsServer(81);//port du Websocket
 String htmlPage = R"rawliteral(
 
 ICI La page WEB HTMP CSS JS 
