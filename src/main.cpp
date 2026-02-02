@@ -7,11 +7,6 @@
 const char* ssid = "EAU-Terminal";//Nom du SSID (Wifi)
 const char* password = "12345678";//Code du Wifi
 
-#define RATIO_DIVISEUR =2;
-#define ADC_ATTEN = ADC_11db;
-#define ADC_MAX = 8191.0;
-#define VREF = 2.5;
-
 AsyncWebServer server(80);//Port du serveur Web 
 WebSocketsServer webSocket = WebSocketsServer(81);//port du Websocket
 String htmlPage = R"rawliteral(
