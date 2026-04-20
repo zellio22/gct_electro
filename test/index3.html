@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Commande ESP32</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    text-align: center;
+    padding-top: 25px;
+  }
+
+  button {
+    width: 200px;
+    height: 60px;
+    font-size: 15px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .b1 { background: #16cf02; color: white; }
+  .b2 { background: #dc3545; color: white; }
+  .b3 { background: #007bff; color: white; }
+  .b4 { background: #dc3545; color: white; }
+  .b5 { background: #007bff; color: white; }
+  .b6 { background: #dc3545; color: white; }
+  .b7 { background: #007bff; color: white; }
+  .b8 { background: #dc3545; color: white; }
+
+</style>
+</head>
+
+<body>
+
+<h1>Commande électrovannes</h1>
+
+<button class="b1" onclick="sendDeuxPins()">CYCLE COMPLET</button>
+<script>
+    function cmdDeuxPins() {
+        sendCmd(18,1);
+        sendCmd(19,1);
+    }
+</script>
+<button class="b2" onclick="sendDeuxPinsOFF()">OFF</button><br>
+<script>
+    function cmdDeuxPinsOFF() {
+        sendCmd(18,0);
+        sendCmd(19,0);
+    }
+</script>
+<button class="b3" onclick="sendCmd(18,1)">ELECTROVANNES SELECTIVES</button>
+<button class="b4" onclick="sendCmd(18,0)">OFF</button><br>
+<button class="b5" onclick="sendCmd(19,1)">ELECTROVANNES PERMISSIVES A</button>
+<button class="b6" onclick="sendCmd(19,0)">OFF</button><br>
+<button class="b7" onclick="sendCmd(19,1)">ELECTROVANNES PERMISSIVES B</button>
+<button class="b8" onclick="sendCmd(19,0)">OFF</button><br>
+
+
+<style>
+  .on {
+    color: white;
+    background: green;
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+    margin: 10px;
+    font-weight: bold;
+  }
+
+  .off {
+    color: white;
+    background: red;
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+    margin: 10px;
+    font-weight: bold;
+  }
+</style>
+
+<h2>État des FDC Ouverture</h2>
+
+<div>
+  FDC1 :
+  <span id="FDC1" class="off">INACTIF</span>
+  <img src="Symbole_vanne.png">
+</div>
+
+<div>
+  FDC2 :
+  <span id="FDC2" class="off">INACTIF</span>
+</div>
+
+<script>
+const ESP32_IP = "http://192.168.1.2"; // IP de l’ESP32 voie A
+
+function updateFDCouverture() {
+  fetch(ESP32_IP + "/inputs")
+    .then(response => response.json())
+    .then(data => {
+      updateFDCouverture("FDC1", data.FDC1);
+      updateFDCouverture("FDC2", data.FDC2);
+    })
+    .catch(err => console.error("Erreur lecture FDC :", err));
+}
+
+function updateFDCouverture(id, value) {
+  const el = document.getElementById(id);
+  if (value == 1) {
+    el.textContent = "ACTIF";
+    el.className = "on";
+  } else {
+    el.textContent = "INACTIF";
+    el.className = "off";
+  }
+}
+
+setInterval(updateFDCouverture, 50); // Actualisation toutes les secondes
+</script>
+
+<script>
+const ESP32_IP = "http://192.168.1.2"; // IP de l'ESP32 voie A
+
+function sendCmd(pin, value) {
+  fetch(`${ESP32_IP}/cmd`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      pin: pin,
+      value: value
+    })
+  })
+  .then(response => response.text())
+  .then(data => console.log("Réponse :", data))
+  .catch(error => console.error("Erreur :", error));
+}
+</script>
+
+</body>
+</html>
