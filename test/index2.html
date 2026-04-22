@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>GCT Interface</title>
   <style>
-    /* Style de base conservé du terminal */
     body {
       background-color: #121212;
       font-family: 'Courier New', monospace;
@@ -13,11 +12,10 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      align-items: center;     /* Centre horizontalement */
+      align-items: center;
       min-height: 100vh;
     }
-
-    h1 {
+    h1, h2 {
       text-align: center;
       margin-bottom: 1rem;
       color: #00ff90;
@@ -25,48 +23,23 @@
       text-transform: uppercase;
       letter-spacing: 2px;
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-      color: #00ff90;
-      font-size: 1.5rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .FDC-label {
-      color: #00ff90;
-    }
-
+    .FDC-label { color: #00ff90; }
     button {
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
     }
-    button:hover {
-      transform: scale(1.02);
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    /* Adaptation mobile */
+    button:hover  { transform: scale(1.02); }
+    button:active { transform: scale(0.98); }
     @media (orientation: portrait) {
-      button {
-        font-size: 1.3rem;
-        height: 70px;
-      }
+      button { font-size: 1.3rem; height: 70px; }
     }
-
     .commande {
       display: flex;
       align-items: center;
       margin-bottom: 12px;
       width: 360px;
     }
-
     .btn-marche {
       flex: 1;
       padding: 0.5rem 1.1rem;
@@ -82,7 +55,6 @@
       max-width: 260px;
       text-align: center;
     }
-
     .btn-arret {
       width: 60px;
       height: 30px;
@@ -99,24 +71,18 @@
       font-family: 'Courier New', monospace;
       font-weight: bold;
     }
-  
-    /* Conteneur global des deux vannes */
     .vannes-container {
       display: flex;
       justify-content: center;
-      gap: 80px;               /* espace entre vanne 1 et vanne 2 */
+      gap: 80px;
       margin-top: 20px;
     }
-
-    /* Bloc d'une vanne */
     .vanne {
       display: flex;
       flex-direction: column;
       align-items: center;
       font-family: 'Courier New', monospace;
     }
-
-    /* Titre vanne */
     .vanne-label {
       font-weight: bold;
       font-size: 1.2rem;
@@ -124,40 +90,21 @@
       line-height: 1.1;
       color: #00ff90;
     }
-
-    /* Image vanne */
     .vanne-img {
       display: block;
       width: 250px;
       margin-bottom: 2px;
     }
-
-    /* Ligne FDC */
-    .fdc {
-      font-size: 1.1rem;
-    }
-
-    /* État FDC */
+    .fdc { font-size: 1.1rem; }
     .fdc-etat {
       padding: 2px 6px;
       border-radius: 4px;
       font-weight: bold;
       font-size: 1rem;
     }
-
-    /* Inactif */
-    .fdc-etat-off {
-      background-color: #ff0000;
-      color: white;
-    }
-
-    /* Actif */
-    .fdc-etat-on {
-      background-color: #0077ff;
-      color: black;
-    }
-    /* Chronomêtre*/
-    .chrono{
+    .fdc-etat-off { background-color: #ff0000; color: white; }
+    .fdc-etat-on  { background-color: #0077ff; color: black; }
+    .chrono {
       color: #00ff90;
       font-family: 'Courier New', monospace;
       font-size: 1.2rem;
@@ -171,76 +118,55 @@
 
   <div class="commande">
     <button class="btn-marche" onclick="sendCommand('ACTION_1')">CYCLE COMPLET</button>
-    <button class="btn-arret" onclick="sendCommand('ACTION_2')">OFF</button>
+    <button class="btn-arret"  onclick="sendCommand('ACTION_2')">OFF</button>
   </div>
-
   <div class="commande">
-  <button class="btn-marche" onclick="sendCommand('ACTION_3')">ELECTROVANNES SELECTIVES</button>
-  <button class="btn-arret" onclick="sendCommand('ACTION_4')">OFF</button>
+    <button class="btn-marche" onclick="sendCommand('ACTION_3')">ELECTROVANNES SELECTIVES</button>
+    <button class="btn-arret"  onclick="sendCommand('ACTION_4')">OFF</button>
   </div>
-
   <div class="commande">
     <button class="btn-marche" onclick="sendCommand('ACTION_5')">ELECTROVANNES PERMISSIVES A</button>
-    <button class="btn-arret" onclick="sendCommand('ACTION_6')">OFF</button>
+    <button class="btn-arret"  onclick="sendCommand('ACTION_6')">OFF</button>
   </div>
-
   <div class="commande">
     <button class="btn-marche" onclick="sendCommand('ACTION_7')">ELECTROVANNES PERMISSIVES B</button>
-    <button class="btn-arret" onclick="sendCommand('ACTION_8')">OFF</button>
+    <button class="btn-arret"  onclick="sendCommand('ACTION_8')">OFF</button>
   </div>
 
   <h2>État des FDC Ouverture</h2>
 
   <div class="vannes-container">
-
     <!-- VANNE 1 -->
     <div class="vanne">
-      <div>
       <span class="vanne-label">Vanne 1</span>
-      </div>
-
-      <img src="Symbole_vanne.png" class="vanne-img">
-
+      <img src="/Symbole_vanne.png" class="vanne-img">
       <div class="fdc">
         <span class="FDC-label">FDC ouverture :</span>
         <span id="FDC1" class="fdc-etat-off">INACTIF</span>
       </div>
-
       <div class="chrono">
         <span>Temps :</span>
-        <span id="chronoV1">00.00.000</span>
+        <span id="chronoV1">00:00.000</span>
       </div>
     </div>
 
     <!-- VANNE 2 -->
     <div class="vanne">
-      <div>
       <span class="vanne-label">Vanne 2</span>
-      </div>
-
-      <img src="Symbole_vanne.png" class="vanne-img">
-
+      <img src="/Symbole_vanne.png" class="vanne-img">
       <div class="fdc">
-        <span class="FDC-label">FDC ouverture :</FDC2>
+        <span class="FDC-label">FDC ouverture :</span>
         <span id="FDC2" class="fdc-etat-off">INACTIF</span>
       </div>
-
       <div class="chrono">
         <span>Temps :</span>
-        <span id="chronoV2">00.00.000</span>
+        <span id="chronoV2">00:00.000</span>
       </div>
     </div>
   </div>
 
   <script>
-    const ESP32_A_IP = "192.168.1.2";
-    const ESP32_B_IP = "192.168.1.3";
-  </script>
-
-  <script>
-    const chronoV1 = { start: 0, elapsed: 0, running: false, timer: null };
-    const chronoV2 = { start: 0, elapsed: 0, running: false, timer: null };
-
+    // ---- Formatage du temps ----
     function formatTime(ms) {
       const m = Math.floor(ms / 60000);
       const s = Math.floor((ms % 60000) / 1000);
@@ -252,80 +178,14 @@
       );
     }
 
-    function startChrono(chrono, id) {
-      if (chrono.running) return;
-      chrono.running = true;
-      chrono.start = Date.now() - chrono.elapsed;
-      chrono.timer = setInterval(() => {
-      chrono.elapsed = Date.now() - chrono.start;
-      document.getElementById(id).textContent =
-        formatTime(chrono.elapsed);
-        }, 50);
+    function updateChrono(id, value) {
+      document.getElementById(id).textContent = formatTime(Number(value));
     }
 
-    function stopChrono(chrono) {
-      if (!chrono.running) return;
-      chrono.running = false;
-      clearInterval(chrono.timer);
-    }
-
-    function resetChrono(chrono, id) {
-      stopChrono(chrono);
-      chrono.elapsed = 0;
-      document.getElementById(id).textContent = "00:00.000";
-    }
-  </script>
-
-  <script>
-    function cycleComplet() {
-      resetChrono(chronoV1, "chronoV1");
-      resetChrono(chronoV2, "chronoV2");
-      startChrono(chronoV1, "chronoV1");
-      startChrono(chronoV2, "chronoV2");
-      sendCommand("ACTION_1");
-    }
-
-    function offSystem() {
-      stopChrono(chronoV1);
-      stopChrono(chronoV2);
-      sendCommand("ACTION_2");
-    }
-  </script>
-
-  <script>
-  function updateFDCouverture(id, value) {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    if (value == 1) {
-      el.textContent = "ACTIF";
-      el.className = "fdc-etat-on";
-      if (id === "FDC1") stopChrono(chronoV1);
-      if (id === "FDC2") stopChrono(chronoV2);
-    } else {
-      el.textContent = "INACTIF";
-      el.className = "fdc-etat-off";
-    }
-  }
-  </script>
-
-  <script>
-    const ESP32_IP = "http://192.168.1.2"; // IP de l’ESP32 voie A
-
-    function readFDCouverture() {
-      fetch(ESP32_IP + "/inputs")
-        .then(r => response.json())
-        .then(data => {
-          updateFDCouverture("FDC1", data.FDC1);
-          updateFDCouverture("FDC2", data.FDC2);
-        })
-        .catch(err => console.error("Erreur lecture FDC :", err));
-    }
-
+    // ---- Mise à jour FDC ----
     function updateFDCouverture(id, value) {
       const el = document.getElementById(id);
       if (!el) return;
-
       if (value == 1) {
         el.textContent = "ACTIF";
         el.className = "fdc-etat-on";
@@ -334,70 +194,64 @@
         el.className = "fdc-etat-off";
       }
     }
-    setInterval(readFDCouverture, 100); // Actualisation toutes les secondes
-  </script>
 
-  <script>
-    let socketA;
-    let socketB;
+    // ---- WebSockets ----
+    let socketA, socketB;
     try {
       socketA = new WebSocket("ws://192.168.1.2:81/");
       socketB = new WebSocket("ws://192.168.1.3:81/");
     } catch (e) {
       console.warn("Connexion WebSocket impossible.");
     }
-  </script>
 
-  <script>
-    if (socketA)
-    socketA.onmessage = (event) => {
-      const [type, value] = data.split(":")
-      console.log("ESP32_A ->" + type, value);
-      if (type === "FDC1") {
-        updateFDCouverture ("FDC1" , value);
-      }
-      if (type === "FDC2") {
-        updateFDCouverture ("FDC2" , value);
-      }
+    // Messages reçus de l'ESP32 A
+    if (socketA) {
+      socketA.onmessage = (event) => {
+        const [type, value] = event.data.split(":");
+        if (type === "FDC1")    updateFDCouverture("FDC1", value);
+        if (type === "FDC2")    updateFDCouverture("FDC2", value);
+        if (type === "Chrono_1") updateChrono("chronoV1", value);
+        if (type === "Chrono_2") updateChrono("chronoV2", value);
+      };
     }
-  </script>
 
-  <script>
-    if (socketB) {
-      socketA.onopen =() => {
-        console.log("ESP32_B connecté")
-      }
+    // Surveillance connexion
+    function surveillerSocket(socket, nom) {
+      if (!socket) { console.error(`Socket ${nom} non initialisé.`); return; }
+      socket.onopen  = () => console.log(`${nom} CONNECTÉ.`);
+      socket.onclose = () => console.warn(`${nom} DÉCONNECTÉ.`);
+      socket.onerror = (e)  => console.error(`Erreur ${nom} :`, e);
     }
-  </script>
 
-  <script>
+    surveillerSocket(socketA, "ESP32_A");
+    surveillerSocket(socketB, "ESP32_B");
+
+    // ---- Envoi commandes ----
     function sendCommand(cmd) {
-      if(action === "ACTION_1" || "ACTION_2") {
+      const actionsA  = ["ACTION_3", "ACTION_4", "ACTION_5", "ACTION_6"];
+      const actionsB  = ["ACTION_7", "ACTION_8"];
+      const actionsAB = ["ACTION_1", "ACTION_2"];
+
+      if (actionsAB.includes(cmd)) {
+        if (socketA?.readyState !== WebSocket.OPEN || socketB?.readyState !== WebSocket.OPEN) {
+          alert("Erreur : Au moins un des deux ESP32 n'est pas connecté.");
+        }
         if (socketA?.readyState === WebSocket.OPEN) socketA.send(cmd);
         if (socketB?.readyState === WebSocket.OPEN) socketB.send(cmd);
         return;
-      } else {
-        alert("Action simulée : " + cmd + "\n(Les serveurs des ESP32 ne sont pas connectés)");
       }
-
-      const actionsA =["ACTION_3", "ACTION_4", "ACTION_5", "ACTION_6"];
-        if (actionsA.includes(action)) {
-        if (socketA?.readyState === WebSocket.OPEN) socketA.send(action);
+      if (actionsA.includes(cmd)) {
+        if (socketA?.readyState === WebSocket.OPEN) socketA.send(cmd);
+        else alert("Erreur : l'ESP32 A n'est pas connecté pour cette action.");
         return;
-      } else {
-        alert("Action simulée : " + cmd + "\n(Le serveur de l'ESP32_A n'est pas connecté)");
       }
-
-      const actionsB = ["ACTION_7", "ACTION_8"];
-      if (actionsB.includes(action)) {
-        if (socketB?.readyState === WebSocket.OPEN) socketB.send(action);
+      if (actionsB.includes(cmd)) {
+        if (socketB?.readyState === WebSocket.OPEN) socketB.send(cmd);
+        else alert("Erreur : l'ESP32 B n'est pas connecté pour cette action.");
         return;
-      } else {
-        alert("Action simulée : " + cmd + "\n(Le serveur de l'ESP32_B n'est pas connecté)");
       }
-
-      console.warn("Action inconnue :", action);
     }
   </script>
+
 </body>
 </html>
