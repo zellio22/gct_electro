@@ -7,7 +7,7 @@
 /* ================= WIFI ================= */
 const char* ssid = "Wifi_PC";
 const char* password = "gct123456";
-IPAddress local_ip(192, 168, 1, 2);
+IPAddress local_ip(192, 168, 1, 1);//espA
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
@@ -134,11 +134,10 @@ void setup() {
   digitalWrite(RELAY2_PIN, LOW);
   digitalWrite(RELAY3_PIN, LOW);
 
-  WiFi.mode(WIFI_STA);
-  if (!WiFi.config(local_ip, gateway, subnet)) {
-    Serial.println("Erreur config WiFi");
-  }
-  WiFi.begin(ssid);
+
+  WiFi.softAP(ssid);
+  WiFi.softAPConfig(local_ip, gateway, subnet);/// Normalement ok 
+  Serial.println("AP IP address: " + WiFi.softAPIP().toString());
 
   if (!LittleFS.begin(true)) {
     Serial.println("Erreur montage LittleFS");
@@ -151,23 +150,21 @@ void setup() {
 
   server.serveStatic("/", LittleFS, "/");
 
+  server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest* request) {
+    request->send(204); // 204 = No Content, le navigateur arrête de chercher
+  });
+
   server.begin();
   webSocket.begin();
   webSocket.onEvent(onwebsocketevent);
 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("\nWiFi connecté : " + WiFi.localIP().toString());
+  Serial.println("Serveur WEB + WebSocket started.");
 }
 
 /* ================= LOOP ================= */
 void loop() {
   webSocket.loop();
-  webSocket.broadcastTXT("rssiA:" + String(WiFi.RSSI()));
-  delay(500);
-
+  
   // ---- Lecture FDC ----
   bool fdc1 = (digitalRead(FDC1_PIN) == LOW);
   bool fdc2 = (digitalRead(FDC2_PIN) == LOW);
@@ -207,24 +204,8 @@ void loop() {
     webSocket.broadcastTXT("FDC2:0");
   }
 
-  // ---- Tempo coupure automatique après les 2 FDC ----
-  if (fdc1 && fdc2 && !enAttenteDeCoupure) {
-    tempsFinDeCourse   = millis();
-    enAttenteDeCoupure = true;
-    Serial.println("Les 2 FDC atteints → coupure dans 5s");
-  }
-
-  if (enAttenteDeCoupure && (millis() - tempsFinDeCourse >= 5000)) {
-    digitalWrite(RELAY1_PIN, LOW);
-    digitalWrite(RELAY2_PIN, LOW);
-    digitalWrite(RELAY3_PIN, LOW);
-    relay1 = relay2 = relay3 = false;
-    enAttenteDeCoupure = false;
-    Serial.println("Coupure automatique après 5s");
-  }
-
   // ---- Broadcast chrono toutes les secondes (seulement si en cours) ----
-  if (millis() - time_loop >= 1000) {
+  if (millis() - time_loop >= 50) {
     time_loop = millis(); // ← mise à jour indispensable
 
     if (chronoRunning1) {
@@ -235,9 +216,10 @@ void loop() {
       chronoValue2 = millis() - chronoStart;
       webSocket.broadcastTXT("Chrono_2:" + String(chronoValue2));
     }
-
+/*
     Serial.println("--- État ---");
     Serial.println("FDC1: " + String(fdc1) + " | last: " + String(lastFDC1) + " | running: " + String(chronoRunning1));
     Serial.println("FDC2: " + String(fdc2) + " | last: " + String(lastFDC2) + " | running: " + String(chronoRunning2));
+  */
   }
 }
